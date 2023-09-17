@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+     <div style="float:right;">
+        <button onclick="triggerLogout()"> Logout </button>
+      </div>
+    <h1> Hi {{current_user.name}}</h1>
+
+    <button id="add-book"> <a href="/add/book">Add Book +</a> </button>
+
+
+
+</body>
+    <script>
+        function triggerLogout() {
+            window.location.href = "/logout"
+        }
+    </script>
+</html>
