@@ -19,7 +19,8 @@ CREATE TABLE STUDENT (
     email       VARCHAR(250) NOT NULL UNIQUE,
     reg_no      VARCHAR(75) NOT NULL,
     active      BOOLEAN NOT NULL DEFAULT TRUE,
-    created_on  DATE DEFAULT NOW()
+    created_on  DATE DEFAULT NOW(),
+    created_by  INTEGER REFERENCES EMPLOYEE
 );
 
 CREATE TABLE BOOKS (
@@ -28,7 +29,8 @@ CREATE TABLE BOOKS (
     author              VARCHAR(250) NOT NULL UNIQUE,
     total_copies        INTEGER NOT NULL,
     available_copies    INTEGER NOT NULL,
-    bought_on           DATE DEFAULT NOW()
+    bought_on           DATE DEFAULT NOW(),
+    created_by          INTEGER REFERENCES EMPLOYEE NOT NULL
 );
 
 CREATE TABLE BORROWEDBOOKS (
@@ -37,5 +39,5 @@ CREATE TABLE BORROWEDBOOKS (
     issued_date         DATE DEFAULT NOW(),
     return_date         DATE,
     due_date            DATE,
-    emp_id              INTEGER NOT NULL
+    emp_id              INTEGER REFERENCES EMPLOYEE NOT NULL
 );

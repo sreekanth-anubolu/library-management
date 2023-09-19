@@ -15,6 +15,8 @@
       <button type="submit">Submit</button>
 
   </form>
-
+  {% if error %}
+    <p style="color:red;">Failed to Create Book Record! Retry again after sometime.</p>
+  {% endif %}
 </body>
 </html>

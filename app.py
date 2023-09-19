@@ -6,6 +6,7 @@ from flask_login import LoginManager, login_required, login_user, current_user, 
 import bcrypt
 
 from models.UserModel import UserModel
+from models.BookModel import BookModel
 
 BCRYPT_SALT = b'$2b$12$91.eXPD2irVqBkzL/NLvc.'
 
@@ -68,7 +69,11 @@ def logout():
 @app.route("/")
 @login_required
 def home():
-    return render_template("home.html", current_user=current_user)
+    books = BookModel.get_books()
+    print(books)
+    for book in books:
+        print(book.bought_on)
+    return render_template("home.html", current_user=current_user, books=books)
 
 
 @app.route("/add/book", methods=["GET", "POST"])
@@ -77,9 +82,21 @@ def add_book():
     if request.method == "GET":
         return render_template("add_book.html")
     else:
-        pass
+        title = request.form["title"].title()
+        author = request.form["author"].title()
+        copies = int(request.form.get("copies", 0))
+        created = BookModel.create_book(title, author, copies, current_user.id)
+        if created:
+            return redirect("/")
+        else:
+            return render_template("add_book.html", error=True)
 
 
+@app.route("/book/<int:id>/edit")
+@login_required
+def edit_book(id):
+    books = BookModel.get_book_by_id(id)
+    return render_template("edit_book.html", book=books)
 
 
 
