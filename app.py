@@ -7,6 +7,8 @@ import bcrypt
 
 from models.UserModel import UserModel
 from models.BookModel import BookModel
+from models.studentModel import StudentModel
+from models.BorrowedBooks import BorrowedBooksModel
 
 BCRYPT_SALT = b'$2b$12$91.eXPD2irVqBkzL/NLvc.'
 
@@ -70,10 +72,8 @@ def logout():
 @login_required
 def home():
     books = BookModel.get_books()
-    print(books)
-    for book in books:
-        print(book.bought_on)
-    return render_template("home.html", current_user=current_user, books=books)
+    students = StudentModel.get_students()
+    return render_template("home.html", current_user=current_user, books=books, students=students)
 
 
 @app.route("/add/book", methods=["GET", "POST"])
@@ -92,20 +92,60 @@ def add_book():
             return render_template("add_book.html", error=True)
 
 
-@app.route("/book/<int:id>/edit")
+@app.route("/book/<int:id>/edit", methods=["GET", "POST"])
 @login_required
 def edit_book(id):
-    books = BookModel.get_book_by_id(id)
-    return render_template("edit_book.html", book=books)
+    if request.method == "GET":
+        books = BookModel.get_book_by_id(id)
+        return render_template("edit_book.html", book=books)
+    else:
+        title = request.form["title"].title()
+        author = request.form["author"].title()
+        copies = int(request.form.get("copies", 0))
+        available_copies = int(request.form.get("available_copies", 0))
+        updated = BookModel.update_book(id, title, author, copies, available_copies)
+        if updated:
+            return redirect("/")
+        else:
+            return redirect(f"/book/{id}/edit")
+
+
+@app.route("/add/student", methods=["GET", "POST"])
+@login_required
+def add_student():
+    if request.method == "GET":
+        return render_template("add_student.html")
+    else:
+        name = request.form["name"].title()
+        email = request.form["email"]
+        reg_number = request.form.get("registration_number")
+        print("====================")
+        print(name, email, reg_number)
+        created = StudentModel.create_student(name, email, reg_number, current_user.id)
+        if created:
+            return redirect("/")
+        else:
+            return render_template("add_student.html", error=True)
 
 
 
+@app.route("/assign-books", methods=["GET"])
+@login_required
+def render_assign_books():
+    students = StudentModel.get_students()
+    books = BookModel.get_books()
+
+    assigned_books = BorrowedBooksModel.get_assigned_books()
+    return render_template("assign_books_to_students.html", books=books, students=students, assigned_books=assigned_books)
 
 
-
-
-
-
+@app.route("/assign/book/<int:book_id>/student/<int:student_id>")
+@login_required
+def assign_book(book_id, student_id):
+    print(book_id)
+    print(student_id)
+    BorrowedBooksModel.assign_book_to_student(student_id, book_id, current_user.id)
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -6,10 +6,11 @@
 </head>
 <body>
 
-  <form action="/edit/book" method="POST">
+  <form action="/book/{{book.id}}/edit" method="POST">
       <input id="title" name="title" type="text" placeholder="Enter Book Title..." value="{{book.title}}" required>
       <input id="author" name="author" type="text" placeholder="Enter Author Name..." value="{{book.author}}" required>
       <input id="copies" name="copies" type="number" value="{{book.total_copies}}" required>
+      <input id="available_copies" name="available_copies" type="number" value="{{book.available_copies}}" required>
 
       <button type="submit">Submit</button>
 

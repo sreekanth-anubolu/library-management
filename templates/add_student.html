@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+</head>
+<body>
+
+  <form action="/add/student" method="POST">
+
+      <input id="name" name="name" type="text" placeholder="Enter Student Name..." required>
+      <input id="email" name="email" type="email" placeholder="Enter Student Email..." required>
+      <input id="registration_number" name="registration_number" placeholder="Enter Registration Number..." type="text">
+
+      <button type="submit">Submit</button>
+
+  </form>
+  {% if error %}
+    <p style="color:red;">Failed to Create Student Record! Retry again after sometime.</p>
+  {% endif %}
+</body>
+</html>

@@ -1,6 +1,7 @@
 
 from util.db import DBConnection
-from util.queries import INSERT_BOOK, GET_BOOKS, GET_BOOK_BY_ID
+from util.queries import INSERT_BOOK, GET_BOOKS, GET_BOOK_BY_ID, UPDATE_BOOK, INSERT_INTO_BORROWED_BOOKS
+from util import utils
 
 class BookModel:
 
@@ -56,17 +57,25 @@ class BookModel:
         book = curr.fetchone()
         b = None
         if book:
-            b = BookModel(id, book[0], book[1], book[2])
+            b = BookModel(id, book[0], book[1], book[2], book[3])
         curr.close()
         conn.close()
         return b
 
-
-
-
-
-
-
+    @staticmethod
+    def update_book(id, title, author, copies, available_copies):
+        try:
+            conn = DBConnection.get_conn()
+            curr = conn.cursor()
+            curr.execute(UPDATE_BOOK, (title, author, copies, available_copies, id))
+            conn.commit()
+            curr.close()
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"Exception in create_book {e}")
+            return False
+        
 
 
 

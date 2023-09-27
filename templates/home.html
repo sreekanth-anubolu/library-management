@@ -16,6 +16,7 @@
       </div>
     <h1> Hi {{current_user.name}}</h1>
 
+    <button id="assign-book"> <a href="/assign-books">Assign Book </a> </button>
     <button id="add-book"> <a href="/add/book">Add Book +</a> </button>
 
     <div>
@@ -45,7 +46,32 @@
         </table>
     </div>
 
+    <br>
+    <br>
+    <button id="add-student"> <a href="/add/student">Add Student +</a> </button>
 
+    <div>
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Reg.No</th>
+                <th>Active</th>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td> {{student.id}}</td>
+                        <td> {{student.name}}</td>
+                        <td>{{student.email}}</td>
+                        <td>{{student.reg_number}}</td>
+                        <td>{{student.active}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </body>
     <script>
